@@ -2,6 +2,12 @@
 
 class PrimeNumbers
 {
+public:
+    PrimeNumbers(int upperLimit);
+    ~PrimeNumbers();
+    int number(int index);
+
+private:
     int *primes;
     int amountOfPrimes;
     enum numberStatus
@@ -9,8 +15,7 @@ class PrimeNumbers
         PRIME,
         COMPOSITE
     };
-public:
-    PrimeNumbers(int upperLimit);
-    ~PrimeNumbers();
-    int number(int index);
+
+    numberStatus* makingTabSieveOfEratosthenes(int upTo);
+    int countPrimes(numberStatus* numbers, int size);
 };
