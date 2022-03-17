@@ -1,18 +1,17 @@
 public class PrimeNumbers
 {
     private int primes[];
-    private int amountOfPrimes;
     
-    public enum numberStatus
+    private enum numberStatus
     {
         PRIME, COMPOSITE;
     }
 
     public int number(int index) throws BadIndexException
     {
-        if(index < 0 || index >= amountOfPrimes)
+        if(index < 0 || index >= primes.length)
         {
-            throw new BadIndexException(amountOfPrimes - 1);
+            throw new BadIndexException(primes.length - 1);
         }
         
         return primes[index];
@@ -26,7 +25,7 @@ public class PrimeNumbers
         }
 
         numberStatus[] numbers = makingTabSieveOfEratosthenes(upperLimit);
-        amountOfPrimes = countPrimes(numbers);
+        int amountOfPrimes = countPrimes(numbers);
         primes = new int[amountOfPrimes];
 
         int index = 0;
