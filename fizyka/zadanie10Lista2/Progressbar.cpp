@@ -66,3 +66,12 @@ sf::Vector2f Progressbar::getSize()
 {
     return background.getSize();
 }
+
+void Progressbar::setSize(float width, float height)
+{
+    sf::Vector2f backgroundSize(width, height);
+    sf::Vector2f barSize(width * getProgress(), height);
+
+    background.setSize(backgroundSize);
+    bar.setSize(barSize);
+}

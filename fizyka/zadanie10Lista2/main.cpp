@@ -11,33 +11,47 @@
 int main()
 {
     std::srand(time(NULL));
-    sf::RenderWindow window(sf::VideoMode(1020, 800), "Symulacja");
+    sf::RenderWindow window(sf::VideoMode(1020, 800), "Symulacja", sf::Style::Close | sf::Style::Resize);
 
     std::vector<Ball> balls;
-    for(int y = 0; y <= window.getSize().y - 100; y++)
-    {
-        balls.push_back( Ball(y, window.getSize()) );
-    }
-    
-    MouseChangeableProgressbar* timeBar = new MouseChangeableProgressbar(window.getSize().x - 20.0f, 60.0f, sf::Color(100, 100, 100), sf::Color(200, 200, 200));
-    timeBar -> setPosition(10.0f, window.getSize().y - 70.0f);
+
+    MouseChangeableProgressbar timeBar(window.getSize().x - 20.0f, 60.0f, sf::Color(100, 100, 100), sf::Color(200, 200, 200));
 
     while (window.isOpen())
     {
         sf::Event event;
         while(window.pollEvent(event))
         {
-            if(event.type == sf::Event::Closed)
+            switch (event.type)
             {
-                window.close();
+                case sf::Event::Closed:
+                    window.close();
+                break;
+
+                case sf::Event::Resized:
+                {
+                    sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                    window.setView(sf::View(visibleArea));
+
+                    timeBar.setSize(event.size.width - 20.0f, 60.0f);
+                    timeBar.setPosition(10.0f, window.getSize().y - 70.0f);
+
+
+                    balls.clear();
+                    for(int y = 0; y <= window.getSize().y - 100; y++)
+                    {
+                        balls.push_back( Ball(y, window.getSize()) );
+                    }
+                }
+                break;
             }
         }
 
         window.clear();
 
-        timeBar -> draw(window);
-        timeBar -> update(window);
-        long double time = 5 * timeBar -> getProgress();
+        timeBar.draw(window);
+        timeBar.update(window);
+        long double time = 5 * timeBar.getProgress();
 
         for(Ball& b : balls)
         {
