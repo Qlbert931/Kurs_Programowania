@@ -3,13 +3,16 @@
 
 #include "Progressbar.hpp"
 
-Progressbar::Progressbar(float p_x, float p_y, sf::Color backgroundColor, sf::Color fillColor)
+Progressbar::Progressbar(float width, float height, sf::Color backgroundColor, sf::Color fillColor)
 {
     background.setFillColor(backgroundColor);
     bar.setFillColor(fillColor);
 
-    background.setSize(sf::Vector2f(p_x, p_y));
-    bar.setSize(sf::Vector2f(0.0f, p_y));
+    sf::Vector2f backgroundSize(width, height);
+    sf::Vector2f barSize(0.0f, height);
+
+    background.setSize(backgroundSize);
+    bar.setSize(barSize);
 
     background.setPosition(0.0f, 0.0f);
     bar.setPosition(0.0f, 0.0f);
@@ -17,30 +20,35 @@ Progressbar::Progressbar(float p_x, float p_y, sf::Color backgroundColor, sf::Co
 
 float Progressbar::getProgress()
 {
-    //std::cout << "get progress = " << bar.getSize().x / background.getSize().x << std::endl;
-    return bar.getSize().x / background.getSize().x;
-}
-
-void Progressbar::setProgress(float newProgress)
-{
-    newProgress = std::min(std::max(newProgress, 0.0f), 1.0f);
-    //std::cout << "set progress = " << newProgress << std::endl;
-
-    bar.setSize(sf::Vector2f(background.getSize().x * newProgress, background.getSize().y));
+    float progress = bar.getSize().x / background.getSize().x;
+    return progress;
 }
 
 void Progressbar::changeProgress(float change)
 {
     float newProgress = getProgress() + change;
-    //std::cout << "change progress = " << newProgress << std::endl;
-
     setProgress(newProgress);
 }
 
-void Progressbar::Draw(sf::RenderWindow* window)
+void Progressbar::setProgress(float newProgress)
 {
-    window -> draw(background);
-    window -> draw(bar);
+    if(newProgress > 1.0f)
+    {
+        newProgress = 1.0f;
+    }
+    else if(newProgress < 0.0f)
+    {
+        newProgress = 0.0f;
+    }
+
+    sf::Vector2f newBarSize(background.getSize().x * newProgress, background.getSize().y); 
+    bar.setSize(newBarSize);
+}
+
+void Progressbar::draw(sf::RenderWindow& window)
+{
+    window.draw(background);
+    window.draw(bar);
 }
 
 void Progressbar::setPosition(float x, float y)
