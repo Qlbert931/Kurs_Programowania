@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     catch(invalid_argument e)
     {
         cerr << argv[1] << "\tUpper limit powinien być liczbą" << endl;
-        return 0;
+        return 1;
     }
     catch(BadUpperLimitException e)
     {
