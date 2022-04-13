@@ -5,9 +5,10 @@
 class Circle : public Figure
 {
 public:
-    Circle(ClientInput& input);
-    double area() override;
-    double perimeter() override;
+    Circle(ClientInput input);
+    double Area() override;
+    double Perimeter() override;
+    std::string NameYourself() override;
 private:
     double radius;
 };

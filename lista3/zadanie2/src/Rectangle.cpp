@@ -1,25 +1,32 @@
 #include "Rectangle.hpp"
 
-bool Rectangle::checkIfItCouldBeRectangle(ClientInput input)
+bool Rectangle::CheckIfItCouldBe(ClientInput input)
 {
-    std::set<double> sides = readSidesFromInput(input);
+    std::set<double> checkSides = readSidesFromInput(input);
 
-    if(sides.size() > 2)
+    if(checkSides.size() > 2)
         return false;
-    if(input.nextInput() != 90.)
+    if(input.NextInput() != 90.)
         return false;
     return true;
 }
 
-Rectangle::Rectangle(ClientInput& input) : Quadrangle(input)
+Rectangle::Rectangle(ClientInput input) : Quadrangle(input)
 {}
 
-double Rectangle::area()
+double Rectangle::Area()
 {
-    return (*sides.begin()) * (*sides.begin() + 1);
+    std::set<double>::iterator iterator = sides.begin();
+    return (*iterator) * (*++iterator);
 }
 
-double Rectangle::perimeter()
+double Rectangle::Perimeter()
 {
-    return 2.*(*sides.begin())  + 2.*(*sides.begin() + 1);
+    std::set<double>::iterator iterator = sides.begin();
+    return 2.*(*iterator)  + 2.*(*++iterator);
+}
+
+std::string Rectangle::NameYourself()
+{
+    return "Prostokąt";
 }

@@ -4,8 +4,9 @@
 class Rectangle : public Quadrangle
 {
 public:
-    static bool checkIfItCouldBeRectangle(ClientInput input);
-    Rectangle(ClientInput& input);
-    double area() override;
-    double perimeter() override;
+    static bool CheckIfItCouldBe(ClientInput input);
+    Rectangle(ClientInput input);
+    double Area() override;
+    double Perimeter() override;
+    std::string NameYourself() override;
 };

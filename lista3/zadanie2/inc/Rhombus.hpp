@@ -4,8 +4,9 @@
 class Rhombus : public Quadrangle
 {
 public:
-    static bool checkIfItCouldBeRhombus(ClientInput input);
-    Rhombus(ClientInput& input);
-    double area() override;
-    double perimeter() override;
+    static bool CheckIfItCouldBe(ClientInput input);
+    Rhombus(ClientInput input);
+    double Area() override;
+    double Perimeter() override;
+    std::string NameYourself() override;
 };

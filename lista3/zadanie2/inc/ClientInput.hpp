@@ -6,9 +6,16 @@ public:
     ClientInput(int argc, char *argv[]);
     ClientInput(ClientInput& input);
     ~ClientInput();
-    double nextInput();
+    double NextInput();
+    char NextType();
+    bool IsNextType();
+    void ChangeIndexBy(int newIndex);
 private:
     double *inputs;
     int amountOfInputs;
-    int index;
+    int inputsIndex;
+    std::string figuresTypes;
+    int figuresTypesIndex;
+    
+    int CountExpectedAmountOfInputs();
 };

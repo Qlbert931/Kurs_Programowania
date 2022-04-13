@@ -1,25 +1,32 @@
+#include <cmath>
+
 #include "Square.hpp"
 
-bool Square::checkIfItCouldBeSquare(ClientInput input)
+bool Square::CheckIfItCouldBe(ClientInput input)
 {
-    std::set<double> sides = readSidesFromInput(input);
+    std::set<double> checkSides = readSidesFromInput(input);
 
-    if(sides.size() > 1)
+    if(checkSides.size() > 1)
         return false;
-    if(input.nextInput() != 90.)
+    if(input.NextInput() != 90.)
         return false;
     return true;
 }
 
-Square::Square(ClientInput& input) : Quadrangle(input)
+Square::Square(ClientInput input) : Quadrangle(input)
 {}
 
-double Square::area()
+double Square::Area()
 {
-    return (*sides.begin()) * (*sides.begin());
+    return pow(*sides.begin(), 2.);
 }
     
-double Square::perimeter()
+double Square::Perimeter()
 {
     return (*sides.begin()) * 4.;
+}
+
+std::string Square::NameYourself()
+{
+    return "Kwadrat";
 }

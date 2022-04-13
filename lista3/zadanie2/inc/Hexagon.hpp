@@ -5,9 +5,10 @@
 class Hexagon : public Figure
 {
 public:
-    Hexagon(ClientInput& input);
-    double area() override;
-    double perimeter() override;
+    Hexagon(ClientInput input);
+    double Area() override;
+    double Perimeter() override;
+    std::string NameYourself() override;
 private:
     double sideLength;
 };

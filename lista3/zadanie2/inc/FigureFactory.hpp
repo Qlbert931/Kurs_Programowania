@@ -6,5 +6,9 @@
 class FigureFactory
 {
 public:
-    Figure* createFigure(char type, ClientInput& input);
+    FigureFactory(int argc, char *argv[]);
+    Figure* CreateNextFigure();
+    bool IsNext();
+private:
+    ClientInput input;
 };

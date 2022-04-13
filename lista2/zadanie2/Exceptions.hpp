@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
 
-class TooLowIndexException : std::exception 
+class TooLowIndexException : public std::exception 
 {
 public:
     TooLowIndexException(int p_min) : min(p_min) {}
@@ -14,7 +14,7 @@ private:
     int min;
 };
 
-class TooHighIndexException : std::exception 
+class TooHighIndexException : public std::exception 
 {
 public:
     TooHighIndexException(int p_max) : max(p_max) {}

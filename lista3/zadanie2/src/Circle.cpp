@@ -4,15 +4,20 @@
 #include "ClientInput.hpp"
 #include "Circle.hpp"
 
-Circle::Circle(ClientInput& input) : radius(input.nextInput())
+Circle::Circle(ClientInput input) : radius(input.NextInput())
 {}
 
-double Circle::area() 
+double Circle::Area() 
 {
     return M_PI * radius * radius;
 }
 
-double Circle::perimeter()
+double Circle::Perimeter()
 {
     return M_PI * 2. * radius;
+}
+
+std::string Circle::NameYourself()
+{
+    return "Koło";
 }

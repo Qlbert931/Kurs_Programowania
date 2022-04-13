@@ -5,9 +5,10 @@
 class Pentagon : public Figure
 {
 public:
-    Pentagon(ClientInput& input);
-    double area() override;
-    double perimeter() override;
+    Pentagon(ClientInput input);
+    double Area() override;
+    double Perimeter() override;
+    std::string NameYourself() override;
 private:
     double sideLength;
 };

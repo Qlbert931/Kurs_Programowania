@@ -5,37 +5,50 @@
 #include "Square.hpp"
 #include "Rectangle.hpp"
 #include "Rhombus.hpp"
-
+#include "Exceptions.hpp"
 
 #include <iostream>
+#include <vector>
 
-Figure* FigureFactory::createFigure(char type, ClientInput& input)
+FigureFactory::FigureFactory(int argc, char *argv[]) : input(argc, argv)
+{}
+
+Figure* FigureFactory::CreateNextFigure()
 {
-    switch (type)
+    Figure * result = nullptr;
+
+    switch (input.NextType())
     {
     case 'o':
-        return new Circle(input);
+        result = new Circle(input);
+        break;
     case 'p':
-        return new Pentagon(input);
+        result = new Pentagon(input);
+        break;
     case 's':
-        return new Hexagon(input);
+        result = new Hexagon(input);
+        break;
     case 'c':
-    {
-        if(Square::checkIfItCouldBeSquare(input))
+        if(Square::CheckIfItCouldBe(input))
+            result = new Square(input);
+        else if(Rectangle::CheckIfItCouldBe(input))
+            result = new Rectangle(input);
+        else if(Rhombus::CheckIfItCouldBe(input))
+            result = new Rhombus(input);
+        else
         {
-            return new Square(input);
-        }
-        else if(Rectangle::checkIfItCouldBeRectangle(input))
-        {
-            return new Rectangle(input);
-        }
-        else if(Rhombus::checkIfItCouldBeRhombus(input))
-        {
-            return new Rhombus(input);
+            std::vector<double> unknow;
+            for(int i = 0; i < 5; i++)
+                unknow.push_back(input.NextInput());
+            throw UnknowQuadrangle(unknow);
         }
     }
-    
-    default:
-        std::cout << "error" << std::endl;
-    }
+
+    input.ChangeIndexBy(result->ChangeInIndex());
+    return result;
+}
+
+bool FigureFactory::IsNext()
+{
+    return input.IsNextType();
 }
