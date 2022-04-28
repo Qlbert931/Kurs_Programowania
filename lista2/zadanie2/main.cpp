@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     if(argc < 2)
     {
-        std::cerr << "Za mało argumentów" << std::endl;
+        std::cout << "Za mało argumentów" << std::endl;
         return 1;
     }
     
@@ -21,12 +21,12 @@ int main(int argc, char *argv[])
     }
     catch(std::invalid_argument e)
     {
-        std::cerr << argv[1] << "\tPierwszy argument musi być liczbą" << std::endl;
+        std::cout << argv[1] << "\tPierwszy argument musi być liczbą" << std::endl;
         return 1;
     }
     catch(TooLowIndexException e)
     {
-        std::cerr << argv[1] << "\tPierwszy argument nie może być mniejszy niż " << e.minIndex() << std::endl;
+        std::cout << argv[1] << "\tPierwszy argument nie może być mniejszy niż " << e.minIndex() << std::endl;
         return 1;
     }
 
@@ -40,15 +40,15 @@ int main(int argc, char *argv[])
         }
         catch(std::invalid_argument e)
         {
-            std::cerr << argv[i] << "\tIndex powinien być liczbą" << std::endl;
+            std::cout << argv[i] << "\tIndex powinien być liczbą" << std::endl;
         }
         catch(TooHighIndexException e)
         {
-            std::cerr << argv[i] << "\tIndex powinien być mniejszy lub równy " << e.maxIndex() << std::endl;
+            std::cout << argv[i] << "\tIndex powinien być mniejszy lub równy " << e.maxIndex() << std::endl;
         }
         catch(TooLowIndexException e)
         {
-            std::cerr << argv[i] << "\tIndex powinien być większy lub równy " << e.minIndex() << std::endl;
+            std::cout << argv[i] << "\tIndex powinien być większy lub równy " << e.minIndex() << std::endl;
         }
     }
 
