@@ -17,7 +17,7 @@ public class MyFrame extends Frame
         setLayout(new BorderLayout());
 
         wynik = new TextArea();
-        dane = new TextField(40);
+        dane = new TextField();
 
         dane.addKeyListener(new KeyAdapter()
         {
