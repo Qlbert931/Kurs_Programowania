@@ -1,20 +1,37 @@
 package com.example.demo2;
 
+import javafx.event.Event;
 import javafx.geometry.Bounds;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.transform.Rotate;
 
-
+/**
+ * Ta klasa kapsułuje Polygon, używa go jako trójkąt i dodaje do niego odpowiednie zachowania
+ */
 public class FXTriangle extends Polygon {
 
     Point2D[] p = new Point2D[3];
+
+    /**
+     * Konstruktor tworzący trójkąt z 3 danych punktów
+     * @param x1 współrzędna x pierwszego punktu
+     * @param y1 współrzędna y pierwszego punktu
+     * @param x2 współrzędna x drugiego punktu
+     * @param y2 współrzędna y drugiego punktu
+     * @param x3 współrzędna x trzeciego punktu
+     * @param y3 współrzędna y trzeciego punktu
+     */
     public FXTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
         super();
         getPoints().addAll(x1, y1, x2, y2, x3, y3);
@@ -29,7 +46,12 @@ public class FXTriangle extends Polygon {
         setOnMouseEntered(new FXTriangleMouseEntered());
     }
 
-    /// Metoda sprawdza czy najechalismy na figure
+    /**
+     * Sprawdza czy dany punkt koliduje z trójkątem
+     * @param x współrzędna x danego punktu
+     * @param y współrzędna y danego punktu
+     * @return true gdy koliduje, false gdy nie
+     */
     public boolean isHit(double x, double y) {
         double Area = area (p[0].getX(), p[0].getY(), p[1].getX(), p[1].getY(), p[2].getX(), p[2].getY());
         double Area1 = area (x, y, p[1].getX(), p[1].getY(), p[2].getX(), p[2].getY());
@@ -39,12 +61,25 @@ public class FXTriangle extends Polygon {
         return Math.round(Area) == Math.round(Area1 + Area2 + Area3);
     }
 
+    /**
+     * Oblicza pole trójkąta składającego się z 3 punktów
+     * @param x1 współrzędna x pierwszego punktu
+     * @param y1 współrzędna y pierwszego punktu
+     * @param x2 współrzędna x drugiego punktu
+     * @param y2 współrzędna y drugiego punktu
+     * @param x3 współrzędna x trzeciego punktu
+     * @param y3 współrzędna y trzeciego punktu
+     * @return pole trójkąta
+     */
     double area(double x1, double y1, double x2, double y2, double x3, double y3)
     {
         return Math.abs((x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)) / 2.0);
     }
 
-    // Zmiana wspolrzednej x prostakata
+    /**
+     * Dodaje wartość do współrzędnej x każdego punktu Trójkąta
+     * @param x wartość
+     */
     public void addX(double x)
     {
         for(int i = 0; i < 3; i++)
@@ -56,7 +91,10 @@ public class FXTriangle extends Polygon {
 
     }
 
-    // Zmiana wspolrzednej y prostakata
+    /**
+     * Dodaje wartość do współrzędnej y każdego punktu Trójkąta
+     * @param y wartość
+     */
     public void addY(double y)
     {
         for(int i = 0; i < 3; i++)
@@ -66,14 +104,19 @@ public class FXTriangle extends Polygon {
         getPoints().setAll(p[0].getX(), p[0].getY(), p[1].getX(), p[1].getY(), p[2].getX(), p[2].getY());
     }
 
-
-    // Implementacja przesuwania
+    /**
+     * Odpowiada za poruszanie trójkątem podczas przeciągnięcia
+     */
     class FXTriangleEventHandler implements EventHandler<MouseEvent>{
 
         FXTriangle triangle;
         private double x;
         private double y;
 
+        /**
+         * Przesuwa trójkąt na pozycje z wydarzenia
+         * @param event wydarzenie
+         */
         private void doMove(MouseEvent event) {
 
             double dx = event.getSceneX() - x;
@@ -103,19 +146,37 @@ public class FXTriangle extends Polygon {
             y += dy;
         }
 
-
+        /**
+         * Odpowiada za prawidłowe zarządzanie x,y potrzebnych do poruszania
+         * @param event wydarzenie
+         */
         @Override
         public void handle(MouseEvent event) {
 
             triangle = (FXTriangle) event.getSource();
 
             if (event.getEventType()==MouseEvent.MOUSE_CLICKED){
+                Main.root.getChildren().remove(Main.colorPicker);
+                if(event.getButton().equals(MouseButton.SECONDARY))
+                {
+                    Main.colorPicker = new ColorPicker((Color) getFill());
+                    Main.colorPicker.setTranslateX(event.getSceneX());
+                    Main.colorPicker.setTranslateY(event.getSceneY());
+                    Main.colorPicker.setOnAction(new EventHandler() {
+                        public void handle(Event t) {
+                            setFill(Main.colorPicker.getValue());
+                            Main.root.getChildren().remove(Main.colorPicker);
+                            Main.colorPicker = null;
+                        }
+                    });
+                    Main.root.getChildren().add(Main.colorPicker);
+                }
                 x = event.getSceneX();
                 y = event.getSceneY();
 
                 if(event.getClickCount() >= 2)
                 {
-                    setRotate(getRotate() + HelloApplication.rotateSlider.getValue());
+                    setRotate(Main.rotateSlider.getValue());
                 }
             }
             if (event.getEventType()==MouseEvent.MOUSE_DRAGGED){
@@ -125,11 +186,17 @@ public class FXTriangle extends Polygon {
         }
     }
 
-    // Implementacja scrollowania
+    /**
+     * Odpowiada za skalowanie trójkąta
+     */
     class FXTriangleScrollHandler implements EventHandler<ScrollEvent>{
 
         FXTriangle triangle;
 
+        /**
+         * Skaluje trójkąt o wartość z ScrollEvent
+         * @param e ScrollEvent
+         */
         private void doScale(ScrollEvent e) {
 
             double x = e.getX();
@@ -153,6 +220,10 @@ public class FXTriangle extends Polygon {
             }
         }
 
+        /**
+         * Odpowiada za skalowanie trójkąta
+         * @param event wydarzenie
+         */
         @Override
         public void handle(ScrollEvent event) {
 
@@ -163,32 +234,47 @@ public class FXTriangle extends Polygon {
             }
         }
     }
-}
 
+    /**
+     *  Odpowiada za ustawianie wyłączanie kolorowej krawędzi gdy mysz opuści trójkąt
+     */
+    class FXTriangleMouseExited implements EventHandler<MouseEvent>{
 
-class FXTriangleMouseExited implements EventHandler<MouseEvent>{
+        /**
+         * Odpowiada za ustawianie wyłączanie kolorowej krawędzi gdy mysz opuści trójkąt
+         * @param event
+         */
+        @Override
+        public void handle(MouseEvent event) {
 
-    @Override
-    public void handle(MouseEvent event) {
+            FXTriangle triangle = (FXTriangle) event.getSource();
 
-        FXTriangle triangle = (FXTriangle) event.getSource();
+            triangle.setStrokeWidth(0);
 
-        triangle.setStrokeWidth(0);
+        }
+    }
 
+    /**
+     *  Odpowiada za ustawianie włączanie kolorowej krawędzi gdy mysz wejdzie na trójkąt
+     */
+    class FXTriangleMouseEntered implements EventHandler<MouseEvent>{
+
+        /**
+         * Odpowiada za ustawianie włączanie kolorowej krawędzi gdy mysz wejdzie na trójkąt
+         * @param event wydarzenie
+         */
+        @Override
+        public void handle(MouseEvent event) {
+
+            FXTriangle triangle = (FXTriangle) event.getSource();
+
+            triangle.setStrokeType(StrokeType.INSIDE);
+            triangle.setStrokeWidth(4);
+            Color newColor = (Color) triangle.getFill();
+            triangle.setStroke(newColor.invert());
+
+        }
     }
 }
 
-class FXTriangleMouseEntered implements EventHandler<MouseEvent>{
 
-    @Override
-    public void handle(MouseEvent event) {
-
-        FXTriangle triangle = (FXTriangle) event.getSource();
-
-        triangle.setStrokeType(StrokeType.INSIDE);
-        triangle.setStrokeWidth(4);
-        Color newColor = (Color) triangle.getFill();
-        triangle.setStroke(newColor.invert());
-
-    }
-}
